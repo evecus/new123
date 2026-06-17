@@ -1,0 +1,19 @@
+[Unit]
+Description=Debian memory supported logging
+DefaultDependencies=no
+Before=rsyslog.service sysinit.target syslog.target
+After=debian-zram-config.service
+Conflicts=shutdown.target
+RequiresMountsFor=/var/log /var/log.hdd
+IgnoreOnIsolate=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/debian/debian-ramlog start
+ExecStop=/usr/lib/debian/debian-ramlog stop
+ExecReload=/usr/lib/debian/debian-ramlog write
+RemainAfterExit=yes
+TimeoutStartSec=30sec
+
+[Install]
+WantedBy=sysinit.target

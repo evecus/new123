@@ -1,0 +1,24 @@
+#!/bin/bash
+# 通用环境变量定义 - 从系统写入的 release 文件动态读取，支持所有机型
+
+# 1. 定义日志路径
+Log="/var/log/debian-hardware-monitor.log"
+
+# 2. 从 ophub-release 读取板型信息（rebuild 脚本在构建时写入）
+if [[ -f /etc/ophub-release ]]; then
+    . /etc/ophub-release
+    BOARDFAMILY="${FAMILY}"
+elif [[ -f /etc/armbian-release ]]; then
+    . /etc/armbian-release
+fi
+
+# 3. 兜底：若变量仍为空则读 debian-release
+if [[ -z "${BOARD}" ]] && [[ -f /etc/debian-release ]]; then
+    . /etc/debian-release
+fi
+
+# 4. 基础目录确保存在
+[ ! -f "$Log" ] && touch "$Log" && chmod 644 "$Log"
+
+# 5. 导出变量供全局使用
+export Log BOARD BOARDFAMILY BOARD_NAME

@@ -1,0 +1,14 @@
+[Unit]
+Description=Debian filesystem resize
+Before=basic.target
+After=sysinit.target local-fs.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/lib/debian/debian-resize-filesystem start
+TimeoutStartSec=6min
+
+[Install]
+WantedBy=basic.target

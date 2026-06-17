@@ -1,0 +1,15 @@
+[Unit]
+Description=Debian first run tasks
+Before=getty.target system-getty.slice
+After=ssh.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+EnvironmentFile=/etc/default/debian-firstrun
+ExecStart=/usr/lib/debian/debian-firstrun start
+TimeoutStartSec=2min
+
+[Install]
+WantedBy=multi-user.target
+

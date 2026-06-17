@@ -1,0 +1,19 @@
+[Unit]
+Description=Ubuntu memory supported logging
+DefaultDependencies=no
+Before=rsyslog.service sysinit.target syslog.target
+After=ubuntu-zram-config.service
+Conflicts=shutdown.target
+RequiresMountsFor=/var/log /var/log.hdd
+IgnoreOnIsolate=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/ubuntu/ubuntu-ramlog start
+ExecStop=/usr/lib/ubuntu/ubuntu-ramlog stop
+ExecReload=/usr/lib/ubuntu/ubuntu-ramlog write
+RemainAfterExit=yes
+TimeoutStartSec=30sec
+
+[Install]
+WantedBy=sysinit.target

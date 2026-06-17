@@ -1,0 +1,19 @@
+# Debian firstrun service
+# Regenerates the SSH keys and performs additional first run tweaks
+# This service will run in parallel with other services
+
+[Unit]
+Description=Debian first run tasks
+Before=getty.target system-getty.slice
+After=ssh.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+EnvironmentFile=/etc/default/ubuntu-firstrun
+ExecStart=/usr/lib/ubuntu/ubuntu-firstrun start
+TimeoutStartSec=2min
+
+[Install]
+WantedBy=multi-user.target
+

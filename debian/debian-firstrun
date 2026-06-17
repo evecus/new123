@@ -1,0 +1,38 @@
+#!/bin/bash
+# Copyright (c) Authors: https://www.armbian.com/authors
+# Modified for Debian / panther-x2 (RK3566) — removed unrelated board workarounds
+
+. /etc/debian-release
+. /usr/lib/debian/debian-common
+
+case "$1" in
+	start)
+		# SSH host keys 重新生成
+		if [[ -d /etc/ssh ]]; then
+			read entropy_before < /proc/sys/kernel/random/entropy_avail
+			rm -f /etc/ssh/ssh_host_*
+			dpkg-reconfigure openssh-server >/dev/null 2>&1 || ssh-keygen -A >/dev/null 2>&1 || true
+			systemctl restart ssh 2>/dev/null || true
+			read entropy_after < /proc/sys/kernel/random/entropy_avail
+			echo "### [firstrun] SSH keys regenerated (entropy: ${entropy_before} -> ${entropy_after})" >> "${Log}"
+		fi
+
+		# 写入安装 UUID
+		if ! grep -q "^INSTALL_UUID=" /etc/debian-release 2>/dev/null; then
+			UUID="$(cat /proc/sys/kernel/random/uuid 2>/dev/null || true)"
+			[[ -n "${UUID}" ]] && echo "INSTALL_UUID=\"${UUID}\"" >> /etc/debian-release
+			echo "### [firstrun] UUID=${UUID}" >> "${Log}"
+		fi
+
+		# 禁用 purple newt 背景
+		[[ -f /etc/newt/palette ]] && sed -i 's/magenta/blue/g' /etc/newt/palette
+
+		systemctl disable debian-firstrun.service
+		echo "### [firstrun] done" >> "${Log}"
+		exit 0
+		;;
+	*)
+		echo "Usage: $0 start"
+		exit 0
+		;;
+esac

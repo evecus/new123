@@ -1,0 +1,8 @@
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    all-eth:
+      match:
+        name: "eth*"
+      dhcp4: true

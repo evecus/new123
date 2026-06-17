@@ -1,0 +1,15 @@
+[Unit]
+Description=Debian hardware optimization
+Before=basic.target
+After=sysinit.target local-fs.target armbian-hardware-monitor.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/debian/debian-hardware-optimization start
+ExecStop=/usr/lib/debian/debian-hardware-optimization stop
+RemainAfterExit=yes
+TimeoutStartSec=2min
+
+[Install]
+WantedBy=basic.target
