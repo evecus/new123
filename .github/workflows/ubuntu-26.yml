@@ -136,7 +136,7 @@ env:
   TZ: UTC
   UBUNTU_MIRROR: "http://ports.ubuntu.com/ubuntu-ports"
   ROOTFS_DIR: /builder/ubuntu-rootfs
-  BOARD: ${{ github.event.inputs.board || \'panther-x2\' }}
+  BOARD: ${{ github.event.inputs.board || 'panther-x2' }}
 
 jobs:
   build:

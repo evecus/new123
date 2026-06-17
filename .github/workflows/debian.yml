@@ -125,7 +125,7 @@ env:
   TZ: UTC
   DEBIAN_MIRROR: "https://deb.debian.org/debian"
   ROOTFS_DIR: /builder/debian-rootfs
-  BOARD: ${{ github.event.inputs.board || \'panther-x2\' }}
+  BOARD: ${{ github.event.inputs.board || 'panther-x2' }}
 
 jobs:
   build:
